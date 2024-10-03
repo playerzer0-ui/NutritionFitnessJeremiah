@@ -26,7 +26,10 @@
         {
             // Read and deserialize the JSON file into the waterTracker object
             string json = File.ReadAllText(filePath);
-            waterTracker = JsonConvert.DeserializeObject<WaterTracker>(json);
+            waterTracker = JsonConvert.DeserializeObject<WaterTracker>(json) ?? new WaterTracker();
+
+            // Display the information directly
+            DisplayInfo();
 
             // If the previous date exists, retrieve the values for water, juice, and soda
             if (waterTracker.WaterData.ContainsKey(prevDate))
@@ -44,7 +47,6 @@
         }
         flag = true;
     }
-
 
     private async Task TakeWater(DrinkType drinkType)
     {
@@ -67,9 +69,17 @@
                 break;
         }
 
-        // Save data back to the file
-        string updatedJson = JsonConvert.SerializeObject(waterTracker.WaterData, Formatting.Indented);
+        // Save the entire waterTracker object back to the file
+        string updatedJson = JsonConvert.SerializeObject(waterTracker, Formatting.Indented);
         await File.WriteAllTextAsync(filePath, updatedJson);
+    }
+
+    private void DisplayInfo()
+    {
+        foreach (var entry in waterTracker.WaterData)
+        {
+            Console.WriteLine($"{entry.Key}: {entry.Value.Water} glasses of Water, {entry.Value.Juice} glasses of Juice, {entry.Value.Soda} glasses of Soda");
+        }
     }
 
 }
