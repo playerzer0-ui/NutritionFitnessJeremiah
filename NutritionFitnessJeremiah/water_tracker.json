@@ -1,12 +1,7 @@
 {
-  "WaterData": {
-    "2024-10-03": {
-      "Name": "Water",
-      "Amount": 12
-    },
-    "2024-10-02": {
-      "Name": "Water",
-      "Amount": 3
-    }
+  "2024-10-03": {
+    "Water": 7,
+    "Juice": 3,
+    "Soda": 3
   }
 }

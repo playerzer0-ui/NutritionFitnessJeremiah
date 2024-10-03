@@ -11,26 +11,29 @@
     {
         public override string Name => "Water";
         public override int Amount { get; set; }
-
-        public override void Add(int amount)
-        {
-            Amount += amount;
-        }
     }
 
-    public class WaterTracker : ITrackable
+    public class JuiceIntake : Drink
     {
-        public Dictionary<string, WaterIntake> WaterData { get; set; } = new Dictionary<string, WaterIntake>();
-
-        public void Track(int amount){}
-
-        public void DisplayInfo()
-        {
-            foreach (var entry in WaterData)
-            {
-                Console.WriteLine($"{entry.Key}: {entry.Value.Amount} glasses of {entry.Value.Name}");
-            }
-        }
+        public override string Name => "Juice";
+        public override int Amount { get; set; }
     }
 
+    public class SodaIntake : Drink
+    {
+        public override string Name => "Soda";
+        public override int Amount { get; set; }
+    }
+
+    public class DrinkIntake
+    {
+        public int Water { get; set; } = 0;
+        public int Juice { get; set; } = 0;
+        public int Soda { get; set; } = 0;
+    }
+
+    public class WaterTracker
+    {
+        public Dictionary<string, DrinkIntake> WaterData { get; set; } = new Dictionary<string, DrinkIntake>();
+    }
 }

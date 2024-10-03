@@ -3,54 +3,73 @@
 @using NutritionFitnessJeremiah.Data
 
 <h3>Drink Water</h3>
-<p>You drank @prevAmount glass(es) of water yesterday.</p>
-<button class="btn btn-info" @onclick="TakeWater">Drink 1 glass of water</button>
-@if (flag)
-{
-    <p>You drank @waterTracker.WaterData[currentDate].Amount glass(es) of water today.</p>
-}
+<p>You drank @prevAmountWater glass(es) of water yesterday.</p>
+<button class="btn btn-info" @onclick="async () => await TakeWater(DrinkType.Water)">Drink 1 glass of water</button>
+<button class="btn btn-info" @onclick="async () => await TakeWater(DrinkType.Juice)">Drink 1 glass of juice</button>
+<button class="btn btn-info" @onclick="async () => await TakeWater(DrinkType.Soda)">Drink 1 glass of soda</button>
+
+
 
 @code {
     private string filePath = "water_tracker.json";
     private string currentDate = DateTime.Now.ToString("yyyy-MM-dd");
     private string prevDate = DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd");
-    private int prevAmount = 0;
-    private bool flag = false;
+
+    private int prevAmountWater = 0;
+    private int prevAmountJuice = 0;
+    private int prevAmountSoda = 0;
+
     private WaterTracker waterTracker;
 
     protected override void OnInitialized()
     {
         if (File.Exists(filePath))
         {
+            // Read and deserialize the JSON file into the waterTracker object
             string json = File.ReadAllText(filePath);
-            waterTracker = JsonConvert.DeserializeObject<WaterTracker>(json);
+            waterTracker = JsonConvert.DeserializeObject<WaterTracker>(json) ?? new WaterTracker();
+
+            // If the previous date exists, retrieve the values for water, juice, and soda
             if (waterTracker.WaterData.ContainsKey(prevDate))
             {
-                prevAmount = waterTracker.WaterData[prevDate].Amount;
+                var prevDayData = waterTracker.WaterData[prevDate];
+                prevAmountWater = prevDayData.Water;
+                prevAmountJuice = prevDayData.Juice;
+                prevAmountSoda = prevDayData.Soda;
             }
-            flag = true;
         }
         else
         {
+            // Initialize waterTracker if the file doesn't exist
             waterTracker = new WaterTracker();
         }
     }
 
-    private void TakeWater()
+
+    private async Task TakeWater(DrinkType drinkType)
     {
-        if (waterTracker.WaterData.ContainsKey(currentDate))
+        if (!waterTracker.WaterData.ContainsKey(currentDate))
         {
-            waterTracker.WaterData[currentDate].Add(1);
+            waterTracker.WaterData[currentDate] = new DrinkIntake();
         }
-        else
+
+        // Update the count based on the drink type
+        switch (drinkType)
         {
-            waterTracker.WaterData[currentDate] = new WaterIntake { Amount = 1 };
+            case DrinkType.Water:
+                waterTracker.WaterData[currentDate].Water += 1;
+                break;
+            case DrinkType.Juice:
+                waterTracker.WaterData[currentDate].Juice += 1;
+                break;
+            case DrinkType.Soda:
+                waterTracker.WaterData[currentDate].Soda += 1;
+                break;
         }
 
         // Save data back to the file
-        string updatedJson = JsonConvert.SerializeObject(waterTracker, Formatting.Indented);
-        File.WriteAllText(filePath, updatedJson);
-
-        flag = true;
+        string updatedJson = JsonConvert.SerializeObject(waterTracker.WaterData, Formatting.Indented);
+        await File.WriteAllTextAsync(filePath, updatedJson);
     }
+
 }

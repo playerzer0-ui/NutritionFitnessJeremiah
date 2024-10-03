@@ -4,7 +4,10 @@
     {
         public abstract string Name { get; }
         public abstract int Amount { get; set; }
-        public abstract void Add(int amount);
+        public void Add(int amount)
+        {
+            Amount += amount;
+        }
     }
 
 }
