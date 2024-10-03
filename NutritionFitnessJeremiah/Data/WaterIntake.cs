@@ -27,10 +27,11 @@
 
     public class DrinkIntake
     {
-        public int Water { get; set; } = 0;
-        public int Juice { get; set; } = 0;
-        public int Soda { get; set; } = 0;
+        public int Water { get; set; }
+        public int Juice { get; set; }
+        public int Soda { get; set; }
     }
+
 
     public class WaterTracker
     {

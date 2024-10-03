@@ -3,12 +3,10 @@
 @using NutritionFitnessJeremiah.Data
 
 <h3>Drink Water</h3>
-<p>You drank @prevAmountWater glass(es) of water yesterday.</p>
+<p>You drank @prevAmountWater glass(es) of water, @prevAmountJuice glass(es) of juice and @prevAmountSoda glass(es) of soda yesterday.</p>
 <button class="btn btn-info" @onclick="async () => await TakeWater(DrinkType.Water)">Drink 1 glass of water</button>
 <button class="btn btn-info" @onclick="async () => await TakeWater(DrinkType.Juice)">Drink 1 glass of juice</button>
 <button class="btn btn-info" @onclick="async () => await TakeWater(DrinkType.Soda)">Drink 1 glass of soda</button>
-
-
 
 @code {
     private string filePath = "water_tracker.json";
@@ -20,6 +18,7 @@
     private int prevAmountSoda = 0;
 
     private WaterTracker waterTracker;
+    private bool flag = false;
 
     protected override void OnInitialized()
     {
@@ -27,7 +26,7 @@
         {
             // Read and deserialize the JSON file into the waterTracker object
             string json = File.ReadAllText(filePath);
-            waterTracker = JsonConvert.DeserializeObject<WaterTracker>(json) ?? new WaterTracker();
+            waterTracker = JsonConvert.DeserializeObject<WaterTracker>(json);
 
             // If the previous date exists, retrieve the values for water, juice, and soda
             if (waterTracker.WaterData.ContainsKey(prevDate))
@@ -43,6 +42,7 @@
             // Initialize waterTracker if the file doesn't exist
             waterTracker = new WaterTracker();
         }
+        flag = true;
     }
 
 
