@@ -1,18 +1,66 @@
 ﻿@page "/"
+@using Newtonsoft.Json
+@using NutritionFitnessJeremiah.Data
+@using RestSharp
 
 <PageTitle>exercises</PageTitle>
 
 <h1>Exercises</h1>
 
-<div class="card" style="width: 18rem;">
-    <img src="..." class="card-img-top" alt="...">
-    <div class="card-body">
-        <h5 class="card-title">Card title</h5>
-        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-        <a href="#" class="btn btn-primary">Go somewhere</a>
-    </div>
+<div class="container text-center">
+    @if (exercises == null)
+    {
+        <p>Loading... this will take lots of time</p>
+    }
+    else
+    {
+        @for (var i = 0; i < exercises.Length; i += 3)
+        {
+            <div class="row">
+                @for (var j = i; j < i + 3 && j < exercises.Length; j++)
+                {
+                    <div class="col-md-4 mb-4">
+                        <div class="card" style="width: 18rem;">
+                            <img src="@exercises[j].gifUrl" class="card-img-top" alt="@exercises[j].name" />
+                            <div class="card-body">
+                                <h5 class="card-title">@exercises[j].name</h5>
+                                <p class="card-text">Target muscles: @string.Join(", ", exercises[j].targetMuscles)</p>
+                                <a href="#" class="btn btn-primary">Check</a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    }
 </div>
 
-@code{
 
+@code{
+    private Rootobject root;
+    private Exercise[] exercises;
+
+    protected override void OnInitialized()
+    {
+        FetchExercises();
+    }
+
+    // Method to call the API
+    private void FetchExercises()
+    {
+        RestClient client = new RestClient("https://exercisedb-api.vercel.app");
+        RestRequest request = new RestRequest("/api/v1/exercises", Method.Get);
+
+        RestResponse response = client.Execute<Rootobject>(request);
+
+        if (response.IsSuccessful && response != null)
+        {
+            root = JsonConvert.DeserializeObject<Rootobject>(response.Content);
+            exercises = root.data.exercises;
+        }
+        else
+        {
+            Console.WriteLine("Error fetching exercises.");
+        }
+    }
 }
