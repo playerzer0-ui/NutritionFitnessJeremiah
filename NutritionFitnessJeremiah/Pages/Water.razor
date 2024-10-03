@@ -5,12 +5,17 @@
 <h3>Drink Water</h3>
 <p>you drank @prevAmount glass of water yesterday</p>
 <button class="btn btn-info" @onclick="TakeWater">drink 1 glass of water</button>
+@if (flag)
+{
+    <p>you drink @waterTracker.WaterData[currentDate].Amount glass of water today</p>
+}
 
 @code {
     private string filePath = "water_tracker.json";
     private string currentDate = DateTime.Now.ToString("yyyy-MM-dd");
     private string prevDate = DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd");
     private int prevAmount = 0;
+    private bool flag = false;
     private WaterTracker waterTracker;
 
     protected override void OnInitialized()
@@ -23,6 +28,7 @@
             {
                 prevAmount = waterTracker.WaterData[prevDate].Amount;
             }
+            flag = true;
         }
         else
         {
@@ -45,7 +51,7 @@
         string updatedJson = JsonConvert.SerializeObject(waterTracker, Formatting.Indented);
         File.WriteAllText(filePath, updatedJson);
 
-        Console.WriteLine("Water intake updated.");
+        flag = true;
     }
 
 }
