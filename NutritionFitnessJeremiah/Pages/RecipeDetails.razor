@@ -1,10 +1,45 @@
 ﻿@page "/recipeDetails"
+@inject NavigationManager Navigation
 @using Newtonsoft.Json
 @using NutritionFitnessJeremiah.Data
 @using RestSharp
 
-<h3>RecipeDetails</h3>
+<h1>@root.title</h1>
+<img src="@root.image" class="image-exercise" alt="@root.title" />
+<p>@root.summary</p>
 
 @code {
+    private RootobjectRecipe root;
+    private string recipeName = "";
 
+    protected override void OnInitialized()
+    {
+        var uri = Navigation.ToAbsoluteUri(Navigation.Uri);
+        if (Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(uri.Query).TryGetValue("name", out var name))
+        {
+            recipeName = name;
+        }
+        FetchRecipes();
+    }
+
+    // Method to call the API
+    private void FetchRecipes()
+    {
+        RestClient client = new RestClient("https://api.spoonacular.com/recipes/");
+        RestRequest request = new RestRequest($"{recipeName}/information", Method.Get);
+        request.AddQueryParameter("apiKey", "1e3e013a4f5542f894dfd8a554528da4");
+        request.AddQueryParameter("includeNutrition", "false");
+
+        RestResponse response = client.Execute<RootobjectRecipe>(request);
+
+        if (response != null)
+        {
+            root = JsonConvert.DeserializeObject<RootobjectRecipe>(response.Content);
+        }
+        else
+        {
+            Console.WriteLine("Error fetching exercises.");
+        }
+    }
 }
+

@@ -1,29 +1,28 @@
-﻿@page "/recipe"
+﻿@page "/recipes"
 @using Newtonsoft.Json
 @using NutritionFitnessJeremiah.Data
 @using RestSharp
 
-<h3>Recipe</h3>
+<h3>Recipes</h3>
 
 <div class="container text-center">
-    @if (exercises == null)
+    @if (results == null)
     {
         <p>Loading... this will take lots of time</p>
     }
     else
     {
-        @for (var i = 0; i < exercises.Length; i += 3)
+        @for (var i = 0; i < results.Length; i += 3)
         {
             <div class="row">
-                @for (var j = i; j < i + 3 && j < exercises.Length; j++)
+                @for (var j = i; j < i + 3 && j < results.Length; j++)
                 {
                     <div class="col-md-4 mb-4">
                         <div class="card" style="width: 18rem;">
-                            <img src="@exercises[j].gifUrl" class="card-img-top" alt="@exercises[j].name" />
+                            <img src="@results[j].image" class="card-img-top" alt="@results[j].title" />
                             <div class="card-body">
-                                <h5 class="card-title">@exercises[j].name</h5>
-                                <p class="card-text">Target muscles: @string.Join(", ", exercises[j].targetMuscles)</p>
-                                <a href="/exerciseDetails?name=@exercises[j].name" class="btn btn-primary">Check</a>
+                                <h5 class="card-title">@results[j].title</h5>
+                                <a href="/recipeDetails?name=@results[j].id" class="btn btn-primary">Check</a>
                             </div>
                         </div>
                     </div>
@@ -35,8 +34,8 @@
 
 
 @code {
-    private Rootobject root;
-    private Exercise[] exercises;
+    private RootobjectList root;
+    private Result[] results;
 
     protected override void OnInitialized()
     {
@@ -46,15 +45,15 @@
     // Method to call the API
     private void FetchExercises()
     {
-        RestClient client = new RestClient("https://exercisedb-api.vercel.app");
-        RestRequest request = new RestRequest("/api/v1/exercises", Method.Get);
+        RestClient client = new RestClient("https://api.spoonacular.com/recipes/complexSearch");
+        RestRequest request = new RestRequest("?minProtein=30&maxFat=10&apiKey=1e3e013a4f5542f894dfd8a554528da4", Method.Get);
 
         RestResponse response = client.Execute<Rootobject>(request);
 
         if (response.IsSuccessful && response != null)
         {
-            root = JsonConvert.DeserializeObject<Rootobject>(response.Content);
-            exercises = root.data.exercises;
+            root = JsonConvert.DeserializeObject<RootobjectList>(response.Content);
+            results = root.results;
         }
         else
         {
