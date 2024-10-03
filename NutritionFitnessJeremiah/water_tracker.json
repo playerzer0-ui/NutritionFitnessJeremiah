@@ -1,9 +1,11 @@
 {
   "WaterData": {
     "2024-10-03": {
-      "Amount": 4
+      "Name": "Water",
+      "Amount": 12
     },
     "2024-10-02": {
+      "Name": "Water",
       "Amount": 3
     }
   }
