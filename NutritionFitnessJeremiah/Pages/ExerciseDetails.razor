@@ -1,0 +1,52 @@
+﻿@page "/exerciseDetails"
+@inject NavigationManager Navigation
+@using Newtonsoft.Json
+@using NutritionFitnessJeremiah.Data
+@using RestSharp
+
+<PageTitle>exercise details</PageTitle>
+
+<h1>@exercise.name</h1>
+<img src="@exercise.gifUrl" class="image-exercise" alt="@exercise.name"/>
+@for(int i = 0; i < exercise.instructions.Length; i++)
+{
+    <p>@exercise.instructions[i]</p>
+}
+<a href="/"><button class="btn btn-danger">go back</button></a>
+
+
+
+@code{
+    private Rootobject root;
+    private Exercise exercise;
+    private string exerciseName = "";
+
+    protected override void OnInitialized()
+    {
+        var uri = Navigation.ToAbsoluteUri(Navigation.Uri);
+        if (Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(uri.Query).TryGetValue("name", out var name))
+        {
+            exerciseName = name;
+        }
+        FetchExercise();
+    }
+
+    private void FetchExercise()
+    {
+        RestClient client = new RestClient("https://exercisedb-api.vercel.app");
+        RestRequest request = new RestRequest("/api/v1/exercises", Method.Get);
+        request.AddQueryParameter("search", exerciseName);
+
+        RestResponse response = client.Execute<Rootobject>(request);
+
+        if (response.IsSuccessful && response != null)
+        {
+            root = JsonConvert.DeserializeObject<Rootobject>(response.Content);
+            exercise = root.data.exercises[0];
+        }
+        else
+        {
+            Console.WriteLine("Error fetching exercise.");
+        }
+    }
+}

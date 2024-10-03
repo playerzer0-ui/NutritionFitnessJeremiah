@@ -1,11 +1,9 @@
-﻿@page "/"
+﻿@page "/recipe"
 @using Newtonsoft.Json
 @using NutritionFitnessJeremiah.Data
 @using RestSharp
 
-<PageTitle>exercises</PageTitle>
-
-<h1>Exercises</h1>
+<h3>Recipe</h3>
 
 <div class="container text-center">
     @if (exercises == null)
@@ -36,7 +34,7 @@
 </div>
 
 
-@code{
+@code {
     private Rootobject root;
     private Exercise[] exercises;
 
@@ -64,3 +62,4 @@
         }
     }
 }
+

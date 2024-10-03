@@ -37,4 +37,6 @@
 
 https://api.spoonacular.com/recipes/complexSearch?minProtein=30&maxFat=10&apiKey=1e3e013a4f5542f894dfd8a554528da4
 
-https://api.spoonacular.com/recipes/informationBulk?apiKey=1e3e013a4f5542f894dfd8a554528da4&includeNutrition=false&ids=715538,716429
+https://api.spoonacular.com/recipes/information?apiKey=1e3e013a4f5542f894dfd8a554528da4&includeNutrition=false&ids=715538
+
+https://api.spoonacular.com/recipes/716429/information?apiKey=1e3e013a4f5542f894dfd8a554528da4&includeNutrition=false
