@@ -8,17 +8,19 @@
 <button class="btn btn-info" @onclick="async () => await TakeWater(DrinkType.Juice)">Drink 1 glass of juice</button>
 <button class="btn btn-info" @onclick="async () => await TakeWater(DrinkType.Soda)">Drink 1 glass of soda</button>
 
+<p>@word</p>
+
 @code {
     private string filePath = "water_tracker.json";
     private string currentDate = DateTime.Now.ToString("yyyy-MM-dd");
     private string prevDate = DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd");
+    private string word = "";
 
     private int prevAmountWater = 0;
     private int prevAmountJuice = 0;
     private int prevAmountSoda = 0;
 
     private WaterTracker waterTracker;
-    private bool flag = false;
 
     protected override void OnInitialized()
     {
@@ -30,6 +32,7 @@
 
             // Display the information directly
             DisplayInfo();
+            word = $"you drink {waterTracker.WaterData[currentDate].Water} glass(es) of Water, {waterTracker.WaterData[currentDate].Juice} glass(es) of Juice, {waterTracker.WaterData[currentDate].Soda} glass(es) of Soda";
 
             // If the previous date exists, retrieve the values for water, juice, and soda
             if (waterTracker.WaterData.ContainsKey(prevDate))
@@ -45,7 +48,6 @@
             // Initialize waterTracker if the file doesn't exist
             waterTracker = new WaterTracker();
         }
-        flag = true;
     }
 
     private async Task TakeWater(DrinkType drinkType)
@@ -71,6 +73,7 @@
 
         // Save the entire waterTracker object back to the file
         string updatedJson = JsonConvert.SerializeObject(waterTracker, Formatting.Indented);
+        word = $"you drink {waterTracker.WaterData[currentDate].Water} glass(es) of Water, {waterTracker.WaterData[currentDate].Juice} glass(es) of Juice, {waterTracker.WaterData[currentDate].Soda} glass(es) of Soda";
         await File.WriteAllTextAsync(filePath, updatedJson);
     }
 
