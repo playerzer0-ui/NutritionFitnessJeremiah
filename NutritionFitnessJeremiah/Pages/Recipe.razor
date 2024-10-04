@@ -39,11 +39,11 @@
 
     protected override void OnInitialized()
     {
-        FetchExercises();
+        FetchRecipes();
     }
 
     // Method to call the API
-    private void FetchExercises()
+    private void FetchRecipes()
     {
         RestClient client = new RestClient("https://api.spoonacular.com/recipes/complexSearch");
         RestRequest request = new RestRequest("?minProtein=30&maxFat=10&apiKey=1e3e013a4f5542f894dfd8a554528da4", Method.Get);
