@@ -32,7 +32,10 @@
 
             // Display the information directly
             DisplayInfo();
-            word = $"you drink {waterTracker.WaterData[currentDate].Water} glass(es) of Water, {waterTracker.WaterData[currentDate].Juice} glass(es) of Juice, {waterTracker.WaterData[currentDate].Soda} glass(es) of Soda";
+            if (waterTracker.WaterData.ContainsKey(currentDate))
+            {
+                word = $"you drink {waterTracker.WaterData[currentDate].Water} glass(es) of Water, {waterTracker.WaterData[currentDate].Juice} glass(es) of Juice, {waterTracker.WaterData[currentDate].Soda} glass(es) of Soda";
+            }
 
             // If the previous date exists, retrieve the values for water, juice, and soda
             if (waterTracker.WaterData.ContainsKey(prevDate))
