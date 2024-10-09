@@ -2,7 +2,6 @@
 {
     public interface ITrackable
     {
-        void Track(int amount);
         void DisplayInfo();
     }
 

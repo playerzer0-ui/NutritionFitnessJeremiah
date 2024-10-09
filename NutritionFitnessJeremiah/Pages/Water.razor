@@ -31,7 +31,7 @@
             waterTracker = JsonConvert.DeserializeObject<WaterTracker>(json) ?? new WaterTracker();
 
             // Display the information directly
-            DisplayInfo();
+            waterTracker.DisplayInfo();
             if (waterTracker.WaterData.ContainsKey(currentDate))
             {
                 word = $"you drink {waterTracker.WaterData[currentDate].Water} glass(es) of Water, {waterTracker.WaterData[currentDate].Juice} glass(es) of Juice, {waterTracker.WaterData[currentDate].Soda} glass(es) of Soda";
@@ -78,14 +78,6 @@
         string updatedJson = JsonConvert.SerializeObject(waterTracker, Formatting.Indented);
         word = $"you drink {waterTracker.WaterData[currentDate].Water} glass(es) of Water, {waterTracker.WaterData[currentDate].Juice} glass(es) of Juice, {waterTracker.WaterData[currentDate].Soda} glass(es) of Soda";
         await File.WriteAllTextAsync(filePath, updatedJson);
-    }
-
-    private void DisplayInfo()
-    {
-        foreach (var entry in waterTracker.WaterData)
-        {
-            Console.WriteLine($"{entry.Key}: {entry.Value.Water} glasses of Water, {entry.Value.Juice} glasses of Juice, {entry.Value.Soda} glasses of Soda");
-        }
     }
 
 }

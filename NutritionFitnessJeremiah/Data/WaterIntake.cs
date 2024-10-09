@@ -32,8 +32,16 @@
         public int Soda { get; set; } = 0;
     }
 
-    public class WaterTracker
+    public class WaterTracker : ITrackable
     {
         public Dictionary<string, DrinkIntake> WaterData { get; set; } = new Dictionary<string, DrinkIntake>();
+
+        public void DisplayInfo()
+        {
+            foreach (var entry in WaterData)
+            {
+                Console.WriteLine($"{entry.Key}: {entry.Value.Water} glasses of Water, {entry.Value.Juice} glasses of Juice, {entry.Value.Soda} glasses of Soda");
+            }
+        }
     }
 }
